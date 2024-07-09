@@ -36,5 +36,6 @@
       },
       "exclude": ["apps/nest-microservices-e2e/**/*"]
     }
-  ]
+  ],
+  "nxCloudAccessToken": "NDc1NmY3YmUtNWM0NC00YjhjLTkzMDUtZjJkYjQ2NmRlN2FifHJlYWQtd3JpdGU="
 }
