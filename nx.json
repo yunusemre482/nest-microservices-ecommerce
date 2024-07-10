@@ -10,7 +10,10 @@
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/jest.config.[jt]s",
       "!{projectRoot}/src/test-setup.[jt]s",
-      "!{projectRoot}/test-setup.[jt]s"
+      "!{projectRoot}/test-setup.[jt]s",
+      "!{projectRoot}/cypress/**/*",
+      "!{projectRoot}/**/*.cy.[jt]s?(x)",
+      "!{projectRoot}/cypress.config.[jt]s"
     ],
     "sharedGlobals": []
   },
@@ -34,7 +37,36 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/nest-microservices-e2e/**/*"]
+      "exclude": [
+        "apps/nest-microservices-e2e/**/*",
+        "apps/api-gateway-e2e/**/*",
+        "apps/authentication-e2e/**/*",
+        "apps/products-e2e/**/*",
+        "payments-e2e/**/*",
+        "apps/payments-e2e/**/*",
+        "apps/users-e2e/**/*",
+        "apps/orders-e2e/**/*",
+        "apps/authentication-e2e/**/*"
+      ]
+    },
+    {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "testTargetName": "test",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview",
+        "serveStaticTargetName": "serve-static"
+      }
+    },
+    {
+      "plugin": "@nx/cypress/plugin",
+      "options": {
+        "targetName": "e2e",
+        "openTargetName": "open-cypress",
+        "componentTestingTargetName": "component-test",
+        "ciTargetName": "e2e-ci"
+      }
     }
   ],
   "nxCloudAccessToken": "NDc1NmY3YmUtNWM0NC00YjhjLTkzMDUtZjJkYjQ2NmRlN2FifHJlYWQtd3JpdGU="
