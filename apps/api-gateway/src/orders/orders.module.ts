@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
-import { RabbitMqModule } from '@nest-microservices/common';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ORDERS_SERVICE } from '../constants/services.constant';
-
 @Module({
   imports: [
-    RabbitMqModule.register({ name: ORDERS_SERVICE }),
+    ClientsModule.register([{ name: ORDERS_SERVICE, transport: Transport.TCP }])
   ],
   controllers: [OrdersController],
   providers: [OrdersService],

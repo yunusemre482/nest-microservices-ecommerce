@@ -7,24 +7,21 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
-import { Transport } from '@nestjs/microservices';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 export async function bootstrap() {
 
-  const config = {
-    REDIS_URL: process.env.REDIS_URL || 'localhost',
-    REDIS_PORT: process.env.REDIS_PORT || 6379
-  }
+  const PORT = parseInt(process.env.PORT as string, 10) || 3002
 
-  const app = await NestFactory.createMicroservice(AppModule, {
-    transport: Transport.REDIS,
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
+    transport: Transport.TCP,
     options: {
-      url: `redis://${config.REDIS_URL}:${config.REDIS_PORT}`
-    }
+      port: PORT
+    },
   });
 
-  await app.listen().then(() => {
-    Logger.log(`Orders Microservice is listening on redis://${config.REDIS_URL}:${config.REDIS_PORT}`);
+  app.listen().then(() => {
+    Logger.log(`Orders microservice is running on: http://localhost:${PORT}`);
   });
 
 }

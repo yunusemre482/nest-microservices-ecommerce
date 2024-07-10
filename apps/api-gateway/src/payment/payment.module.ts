@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 import { PaymentController } from './payment.controller';
 import { PaymentService } from './payment.service';
-import { RabbitMqModule } from '@nest-microservices/common';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { PAYMENTS_SERVICE } from '../constants/services.constant';
-
 @Module({
   imports: [
-    RabbitMqModule.register({ name: PAYMENTS_SERVICE }),
+    ClientsModule.register([{ name: PAYMENTS_SERVICE, transport: Transport.TCP }])
   ],
   controllers: [PaymentController],
   providers: [PaymentService],

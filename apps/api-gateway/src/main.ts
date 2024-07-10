@@ -3,15 +3,13 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import helmet from '@fastify/helmet'
-import bodyParser from "body-parser";
-import { AppModule } from "./app/app.module";
-import { redis } from "./infrastructure/redis/redis.client";
-import fastifyHelmet from "@fastify/helmet";
 
+import fastifyHelmet from "@fastify/helmet";
 import fastifyCompress from "@fastify/compress";
-import { Logger } from "@nestjs/common";
 import fastifyRateLimit from "@fastify/rate-limit";
+
+import { Logger } from "@nestjs/common";
+import { AppModule } from "./app/app.module";
 
 async function bootstrap() {
   const fastify = new FastifyAdapter({ logger: true });
@@ -26,13 +24,11 @@ async function bootstrap() {
     AppModule,
     fastify
   );
-  
+
   const globalPrefix = 'api';
+
   app.setGlobalPrefix(globalPrefix);
-
-  app.use(bodyParser.urlencoded({ extended: true }));
   app.enableCors();
-
 
   await app.register(fastifyRateLimit, {
     max: 100,
