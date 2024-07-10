@@ -1,32 +1,38 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "declaration": true,
+    "resolveJsonModule": true,
+    "emitDeclarationOnly": true,
     "strict": true,
     "rootDir": ".",
     "sourceMap": true,
-    "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@nest-microservices/common": [
-        "libs/common/src/index.ts",
-        "libs/common/src"
-      ]
+      "@apps/*": ["apps/*"],
+      "@nest-microservices/common": ["common/src/index.ts"],
+      "@shared/*": ["shared/*"],
+      "@types/*": ["types/*"]
     }
   },
+  "include": ["apps/**/*", "libs/**/*", "shared/**/*", "types/**/*"],
   "exclude": [
     "node_modules",
-    "tmp"
+    "temp",
+    "packages/*/lib",
+    "node_modules",
+    "babel.config.js",
+    "metro.config.js",
+    "jest.config.js",
+    "jest.config.ts",
+    "jest.present.js"
   ]
 }

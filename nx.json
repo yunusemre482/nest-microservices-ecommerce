@@ -46,7 +46,8 @@
         "apps/payments-e2e/**/*",
         "apps/users-e2e/**/*",
         "apps/orders-e2e/**/*",
-        "apps/authentication-e2e/**/*"
+        "apps/authentication-e2e/**/*",
+        "apps/api-gateway-e2e/**/*"
       ]
     },
     {

@@ -1,0 +1,54 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "Starting the build"
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+  build:
+    commands:
+      - echo "Build started on `date`"
+      - echo "Building the Docker image..."
+
+      - echo "Building the gateway service"
+      - docker build -t gateway -f apps/gateway/Dockerfile .
+      - echo "build complete gateway service"
+      - docker tag gateway:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/gateway:latest
+
+      - echo "Building user service"
+      - docker build -t users -f apps/users/Dockerfile .
+      - echo "Building auth service"
+      - docker tag users:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/users:latest
+
+      - echo "Building authentication service"
+      - docker build -t auth -f apps/authentication/Dockerfile .
+      - echo "build complete auth service"
+      - docker tag auth:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/auth:latest
+
+      - echo "Building orders service"
+      - docker build -t orders -f apps/orders/Dockerfile .
+      - echo "build complete orders service"
+      - docker tag orders:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/orders:latest
+
+      - echo "Building the products service"
+      - docker build -t products -f apps/products/Dockerfile .
+      - echo "build complete products service"
+      - docker tag products:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/products:latest
+
+      - echo "Building the payment service"
+      - docker build -t payments -f apps/payments/Dockerfile .
+      - echo "build complete payment service"
+      - docker tag payment:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/payment:latest
+
+  post_build:
+    commands:
+      - echo "Build completed on `date`"
+      - echo "Pushing the Docker images to ECR..."
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/gateway:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/users:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/auth:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/orders:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/products:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/payment:latest
+
+
