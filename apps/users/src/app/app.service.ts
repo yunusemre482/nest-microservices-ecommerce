@@ -22,4 +22,8 @@ export class AppService {
 
   }
 
+  async findAllUsers() {
+    return this.getUsers();
+  }
+
 }

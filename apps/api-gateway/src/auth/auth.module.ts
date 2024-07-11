@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AUTHENTICATION_SERVICE } from '../constants/services.constant';
+import { RabbitMqModule } from '@libs/common/src';
+import { AUTHENTICATION_SERVICE, AUTHENTICATION_SERVICE_QUEUE } from '@libs/constants/src';
 
 @Module({
   imports: [
-    ClientsModule.register([{ name: AUTHENTICATION_SERVICE, transport: Transport.TCP }])
+    RabbitMqModule.register({
+      name: AUTHENTICATION_SERVICE,
+      queue: AUTHENTICATION_SERVICE_QUEUE
+    }),
   ],
   controllers: [AuthController],
   providers: [AuthService],

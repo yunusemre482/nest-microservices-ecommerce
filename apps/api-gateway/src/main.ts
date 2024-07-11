@@ -8,16 +8,20 @@ import fastifyHelmet from "@fastify/helmet";
 import fastifyCompress from "@fastify/compress";
 import fastifyRateLimit from "@fastify/rate-limit";
 
-import { Logger } from "@nestjs/common";
+import { Logger, ValidationPipe } from "@nestjs/common";
 import { AppModule } from "./app/app.module";
+import { ConfigService } from "@nestjs/config";
 
 async function bootstrap() {
   const fastify = new FastifyAdapter({ logger: true });
+  const configService = new ConfigService();
+
+
 
   const config = {
-    GATEWAY_PORT: process.env.GATEWAY_PORT || 3000,
-    REDIS_URL: process.env.REDIS_URL || "localhost",
-    REDIS_PORT: process.env.REDIS_PORT || 6379
+    GATEWAY_PORT:configService.get('PORT') || 3001,
+    REDIS_URL: configService.get('REDIS_URL') || "localhost",
+    REDIS_PORT:configService.get('REDIS_PORT')|| 6379
   };
 
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -29,6 +33,13 @@ async function bootstrap() {
 
   app.setGlobalPrefix(globalPrefix);
   app.enableCors();
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+    }),
+  );
 
   await app.register(fastifyRateLimit, {
     max: 100,
@@ -48,9 +59,11 @@ async function bootstrap() {
   });
 
   await app.startAllMicroservices();
+  await app.listen(config.GATEWAY_PORT)
 
-  await app.listen(config.GATEWAY_PORT).then(() => {
-    Logger.log(`API Gateway is running on: http://localhost:${config.GATEWAY_PORT}`);
-  })
+  Logger.log(
+    `Server running on http://localhost:${config.GATEWAY_PORT}/${globalPrefix}`,
+    'Bootstrap',
+  );
 }
 bootstrap();

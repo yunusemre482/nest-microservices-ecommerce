@@ -5,23 +5,46 @@
 
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-
 import { AppModule } from './app/app.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { MicroserviceOptions, RmqOptions, Transport } from '@nestjs/microservices';
+import { ConfigService } from '@nestjs/config';
+import { AUTHENTICATION_SERVICE_QUEUE, USERS_SERVICE_QUEUE } from '@libs/constants/src';
 
-async function bootstrap() {
-  const PORT = parseInt(process.env.PORT as string, 10) || 3001
+const logger = new Logger('Main')
 
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
-    transport: Transport.TCP,
+
+
+export async function bootstrap() {
+
+  const configService = new ConfigService();
+
+  const port = configService.get<number>('PORT') ?? 3001;
+  const url = configService.get<string>('RABBIT_MQ_URI');
+  const queue = configService.get<string>('RABBIT_MQ_AUTH_QUEUE') ?? AUTHENTICATION_SERVICE_QUEUE;
+
+  logger.debug(`PORT: ${port}`);
+  logger.debug(`RABBIT_MQ_URI: ${url}`);
+  logger.debug(`RABBIT_MQ_AUTH_QUEUE: ${queue}`);
+
+  const microServiceOptions = {
+    transport: Transport.RMQ,
     options: {
-      port: PORT
-    },
-  });
+      urls: [url],
+      queue: queue,
+      queueOptions: {
+        durable: true
+      }
+    }
+  } as RmqOptions;
 
-  app.listen().then(() => {
-    Logger.log(`Authentication microservice is running on: http://localhost:${PORT}`);
-  });
+  const app = await NestFactory.create(AppModule);
+
+  app.connectMicroservice<MicroserviceOptions>(microServiceOptions);
+
+  await app.startAllMicroservices();
+  await app.listen(port)
+
+  logger.log(`Authentication microservice is running on: http://localhost:${port}`);
 }
 
 bootstrap();

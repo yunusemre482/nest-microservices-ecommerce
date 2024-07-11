@@ -1,19 +1,15 @@
 import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { USERS_SERVICE } from '../constants/services.constant';
-
+import { RabbitMqModule } from '@libs/common/src';
+import { USERS_SERVICE, USERS_SERVICE_QUEUE } from '@libs/constants/src';
 
 @Module({
   imports: [
-    ClientsModule.register([{
+    RabbitMqModule.register({
       name: USERS_SERVICE,
-      transport: Transport.TCP,
-      options: {
-        port: 3005
-      }
-    }])
+      queue: USERS_SERVICE_QUEUE
+    }),
   ],
   providers: [UsersService],
   controllers: [UsersController],

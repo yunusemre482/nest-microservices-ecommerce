@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { PRODUCTS_SERVICE } from '../constants/services.constant';
+import { RabbitMqModule } from '@libs/common/src';
+import { PRODUCTS_SERVICE, PRODUCTS_SERVICE_QUEUE } from '@libs/constants/src';
 
 @Module({
   imports: [
-    ClientsModule.register([{ name: PRODUCTS_SERVICE, transport: Transport.TCP }])
+    RabbitMqModule.register({
+      name: PRODUCTS_SERVICE,
+      queue: PRODUCTS_SERVICE_QUEUE
+    }),
   ],
   controllers: [ProductsController],
   providers: [ProductsService],

@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { ORDERS_SERVICE } from '../constants/services.constant';
+import { RabbitMqModule } from '@libs/common/src';
+import { ORDERS_SERVICE, ORDERS_SERVICE_QUEUE } from '@libs/constants/src';
 @Module({
   imports: [
-    ClientsModule.register([{ name: ORDERS_SERVICE, transport: Transport.TCP }])
+    RabbitMqModule.register({
+      name: ORDERS_SERVICE,
+      queue: ORDERS_SERVICE_QUEUE
+    }),
   ],
   controllers: [OrdersController],
   providers: [OrdersService],

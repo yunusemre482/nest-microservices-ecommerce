@@ -7,6 +7,7 @@ import { PaymentModule } from '../payment/payment.module';
 import { OrdersModule } from '../orders/orders.module';
 import { ProductsModule } from '../products/products.module';
 import { AuthModule } from '../auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -14,7 +15,10 @@ import { AuthModule } from '../auth/auth.module';
     UsersModule,
     PaymentModule,
     OrdersModule,
-    ProductsModule
+    ProductsModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

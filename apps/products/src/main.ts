@@ -5,27 +5,46 @@
 
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-
 import { AppModule } from './app/app.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { MicroserviceOptions, RmqOptions, Transport } from '@nestjs/microservices';
+import { ConfigService } from '@nestjs/config';
+import { PRODUCTS_SERVICE_QUEUE, RABBIT_MQ_DEFAULT_URL, USERS_SERVICE_QUEUE } from '@libs/constants/src';
+
+const logger = new Logger('Main')
+
+
 
 export async function bootstrap() {
 
-  const PORT = parseInt(process.env.PORT as string, 10) || 3004
+  const configService = new ConfigService();
 
-  Logger.log(`PORT: ${PORT}`);
+  const port = configService.get<number>('PORT') ?? 3003;
+  const url = configService.get<string>('RABBIT_MQ_URI') ?? RABBIT_MQ_DEFAULT_URL;
+  const queue = configService.get<string>('RABBIT_MQ_PRODUCT_QUEUE') ?? PRODUCTS_SERVICE_QUEUE;
 
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
-    transport: Transport.TCP,
+  logger.debug(`PORT: ${port}`);
+  logger.debug(`RABBIT_MQ_URI: ${url}`);
+  logger.debug(`RABBIT_MQ_USER_QUEUE: ${queue}`);
+
+  const microServiceOptions = {
+    transport: Transport.RMQ,
     options: {
-      port: PORT
-    },
-  });
+      urls: [url],
+      queue: queue,
+      queueOptions: {
+        durable: true
+      }
+    }
+  } as RmqOptions;
 
-  app.listen().then(() => {
-    Logger.log(`Products microservice is running on: http://localhost:${PORT}`);
-  });
+  const app = await NestFactory.create(AppModule);
 
+  app.connectMicroservice<MicroserviceOptions>(microServiceOptions);
+
+  await app.startAllMicroservices();
+  await app.listen(port)
+
+  logger.log(`Products microservice is running on: http://localhost:${port}`);
 }
 
 bootstrap();
