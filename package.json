@@ -3,7 +3,28 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "run:api": "nx run source:api"
+    "prebuild": "rimraf dist",
+    "build": "nest build",
+    "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./apps/ordering-app/test/jest-e2e.json"
+  },
+  "nx": {
+    "targets":{
+      "build": {
+        "executor": "@nx/webpack:webpack",
+        "options": {
+          "generatePackageJson": true
+        }
+    }
   },
   "private": true,
   "dependencies": {
@@ -20,6 +41,8 @@
     "amqp-connection-manager": "^4.1.14",
     "amqplib": "^0.10.4",
     "axios": "^1.6.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
     "fastify-compress": "^4.1.0",
     "ioredis": "^5.4.1",
     "jsonc-parser": "^3.3.1",
@@ -52,7 +75,6 @@
     "@types/node": "~18.16.9",
     "@typescript-eslint/eslint-plugin": "^7.3.0",
     "@typescript-eslint/parser": "^7.3.0",
-
     "@vitest/coverage-v8": "^1.0.4",
     "@vitest/ui": "^1.3.1",
     "cypress": "^13.13.0",

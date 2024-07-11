@@ -1,22 +1,151 @@
 version: '3.1'
 
 services:
+    build:
+      context: .
+      dockerfile: ./apps/authentication/Dockerfile
+      target: development
+    command: npm run start:dev authentication
+    ports:
+      - '3001:3001'
+    env_file:
+      - ./apps/authentication/.env
+      - ./apps/authentication/.env.production
+    depends_on:
+      - mongodb-primary
+      - mongodb-secondary
+      - mongodb-arbiter
+      - rabbitmq
+      - redis
+      - minio
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
   # api-gateway:
-  #   container_name: ecommerce-api-gateway
-  #   restart: always
-  #   build: .
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/api-gateway/Dockerfile
+  #     target: development
+  #   command: npm run start:dev api-gateway
   #   ports:
   #     - '3000:3000'
-  #   external_links:
-  #     - mongo
-  #     - redis
+  #   env_file:
+  #     - ./apps/api-gateway/.env.production
+  #   depends_on:
+  #     - mongodb-primary
+  #     - mongodb-secondary
+  #     - mongodb-arbiter
   #     - rabbitmq
+  #     - auth
+  #     - user
+  #     - product
+  #     - order
+  #     - redis
+  #     - minio
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  # user:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/users/Dockerfile
+  #     target: development
+  #   command: npm run start:dev users
+  #   ports:
+  #     - '3001:3001'
+  #   env_file:
+  #     - ./apps/users/.env.production
+  #   depends_on:
+  #     - mongodb-primary
+  #     - mongodb-secondary
+  #     - mongodb-arbiter
+  #     - rabbitmq
+  #     - auth
+  #     - redis
+  #     - minio
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  # auth:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/authentication/Dockerfile
+  #     target: development
+  #   command: npm run start:dev auth
+  #   ports:
+  #     - '3002:3002'
+  #   env_file:
+  #     - ./apps/authentication/.env.production
+  #   depends_on:
+  #     - mongodb-primary
+  #     - mongodb-secondary
+  #     - mongodb-arbiter
+  #     - rabbitmq
+  #     - redis
+  #     - minio
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  # product:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/products/Dockerfile
+  #     target: development
+  #   command: npm run start:dev products
+  #   env_file:
+  #     - ./apps/products/.env.production
+  #   depends_on:
+  #     - rabbitmq
+  #     - redis
   #     - minio
   #     - mongodb-primary
   #     - mongodb-secondary
   #     - mongodb-arbiter
-
-
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   ports:
+  #     - '3004:3004'
+  # order:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/orders/Dockerfile
+  #     target: development
+  #   command: npm run start:dev orders
+  #   env_file:
+  #     - ./apps/orders/.env.production
+  #   depends_on:
+  #     - rabbitmq
+  #     - redis
+  #     - minio
+  #     - mongodb-primary
+  #     - mongodb-secondary
+  #     - mongodb-arbiter
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   ports:
+  #     - '3003:3003'
+  # payment:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/payments/Dockerfile
+  #     target: development
+  #   command: npm run start:dev payments
+  #   env_file:
+  #     - ./apps/payments/.env.production
+  #   depends_on:
+  #     - rabbitmq
+  #     - redis
+  #     - minio
+  #     - mongodb-primary
+  #     - mongodb-secondary
+  #     - mongodb-arbiter
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   ports:
+  #     - '3005:3005'
 
   minio:
     image: minio/minio:latest
@@ -36,14 +165,21 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - ./redis:/data
+      - redis_data_container:/data
     command: redis-server
 
   rabbitmq:
-    image: rabbitmq
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: 'rabbitmq'
     ports:
-      - '15672:15672'
-      - '5672:5672'
+      - "15672:15672"
+      - "5672:5672"
+      - "5671:5671"
+    environment:
+      RABBITMQ_DEFAULT_VHOST: vhost
+      RABBITMQ_DEFAULT_USER: rabbitmq
+      RABBITMQ_DEFAULT_PASS: rabbitmq
   mongodb-primary:
     container_name: mongo
     image: mongo
@@ -56,7 +192,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-      MONGODB_ADVERTISED_HOSTNAME : mongodb-primary
+      MONGODB_ADVERTISED_HOSTNAME: mongodb-primary
       MONGODB_REPLICA_SET_MODE: primary
       MONGODB_REPLICA_SET_KEY: replicasetkey123
 
@@ -65,7 +201,7 @@ services:
     depends_on:
       - mongodb-primary
     environment:
-      MONGODB_ADVERTISED_HOSTNAME : mongodb-secondary
+      MONGODB_ADVERTISED_HOSTNAME: mongodb-secondary
       MONGODB_REPLICA_SET_MODE: primary
       MONGODB_REPLICA_SET_KEY: replicasetkey123
       MONGODB_INITIAL_PRIMARY_HOST: mongodb-primary
@@ -76,7 +212,7 @@ services:
     depends_on:
       - mongodb-primary
     environment:
-      MONGODB_ADVERTISED_HOSTNAME : mongodb-arbiter
+      MONGODB_ADVERTISED_HOSTNAME: mongodb-arbiter
       MONGODB_REPLICA_SET_MODE: arbiter
       MONGODB_REPLICA_SET_KEY: replicasetkey123
       MONGODB_INITIAL_PRIMARY_HOST: mongodb-primary
@@ -95,7 +231,8 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
 
 volumes:
+  redis_data_container:
+    driver: local
   mongodb_data_container:
   miniostorage:
     driver: local
-
