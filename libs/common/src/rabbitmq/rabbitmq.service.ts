@@ -10,7 +10,7 @@ export class RabbitMQService {
     return {
       transport: Transport.RMQ,
       options: {
-        urls: [this.configService.get<string>('RABBIT_MQ_URI') ?? "amqp://localhost:5672"],
+        urls: [this.configService.get<string>('RABBIT_MQ_URI') ?? "amqp://rabbitmq:rabbitmq@127.0.0.1:5672"],
         queue: this.configService.get<string>(`RABBIT_MQ_${queue}_QUEUE`),
         noAck,
         persistent: true,
