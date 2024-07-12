@@ -1,152 +1,24 @@
 version: '3.1'
 
 services:
+  api-gateway:
+    container_name: api-gateway
     build:
       context: .
-      dockerfile: ./apps/authentication/Dockerfile
-      target: development
-    command: npm run start:dev authentication
+      dockerfile: ./apps/api-gateway/Dockerfile
+    volumes:
+      - .:/usr/src/app
     ports:
-      - '3001:3001'
-    env_file:
-      - ./apps/authentication/.env
-      - ./apps/authentication/.env.production
+      - '3000:3000'
     depends_on:
+      - rabbitmq
+      - redis
       - mongodb-primary
       - mongodb-secondary
       - mongodb-arbiter
-      - rabbitmq
-      - redis
       - minio
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-  # api-gateway:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/api-gateway/Dockerfile
-  #     target: development
-  #   command: npm run start:dev api-gateway
-  #   ports:
-  #     - '3000:3000'
-  #   env_file:
-  #     - ./apps/api-gateway/.env.production
-  #   depends_on:
-  #     - mongodb-primary
-  #     - mongodb-secondary
-  #     - mongodb-arbiter
-  #     - rabbitmq
-  #     - auth
-  #     - user
-  #     - product
-  #     - order
-  #     - redis
-  #     - minio
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  # user:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/users/Dockerfile
-  #     target: development
-  #   command: npm run start:dev users
-  #   ports:
-  #     - '3001:3001'
-  #   env_file:
-  #     - ./apps/users/.env.production
-  #   depends_on:
-  #     - mongodb-primary
-  #     - mongodb-secondary
-  #     - mongodb-arbiter
-  #     - rabbitmq
-  #     - auth
-  #     - redis
-  #     - minio
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  # auth:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/authentication/Dockerfile
-  #     target: development
-  #   command: npm run start:dev auth
-  #   ports:
-  #     - '3002:3002'
-  #   env_file:
-  #     - ./apps/authentication/.env.production
-  #   depends_on:
-  #     - mongodb-primary
-  #     - mongodb-secondary
-  #     - mongodb-arbiter
-  #     - rabbitmq
-  #     - redis
-  #     - minio
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  # product:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/products/Dockerfile
-  #     target: development
-  #   command: npm run start:dev products
-  #   env_file:
-  #     - ./apps/products/.env.production
-  #   depends_on:
-  #     - rabbitmq
-  #     - redis
-  #     - minio
-  #     - mongodb-primary
-  #     - mongodb-secondary
-  #     - mongodb-arbiter
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3004:3004'
-  # order:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/orders/Dockerfile
-  #     target: development
-  #   command: npm run start:dev orders
-  #   env_file:
-  #     - ./apps/orders/.env.production
-  #   depends_on:
-  #     - rabbitmq
-  #     - redis
-  #     - minio
-  #     - mongodb-primary
-  #     - mongodb-secondary
-  #     - mongodb-arbiter
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3003:3003'
-  # payment:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/payments/Dockerfile
-  #     target: development
-  #   command: npm run start:dev payments
-  #   env_file:
-  #     - ./apps/payments/.env.production
-  #   depends_on:
-  #     - rabbitmq
-  #     - redis
-  #     - minio
-  #     - mongodb-primary
-  #     - mongodb-secondary
-  #     - mongodb-arbiter
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3005:3005'
-
+    networks:
+      - rabbitmq_nodejs
   minio:
     image: minio/minio:latest
     ports:
@@ -180,6 +52,8 @@ services:
       RABBITMQ_DEFAULT_VHOST: vhost
       RABBITMQ_DEFAULT_USER: rabbitmq
       RABBITMQ_DEFAULT_PASS: rabbitmq
+    networks:
+        - rabbitmq_nodejs
   mongodb-primary:
     container_name: mongo
     image: mongo
@@ -236,3 +110,7 @@ volumes:
   mongodb_data_container:
   miniostorage:
     driver: local
+
+networks:
+  rabbitmq_nodejs:
+    driver: bridge
