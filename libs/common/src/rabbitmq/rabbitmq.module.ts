@@ -22,7 +22,7 @@ export class RabbitMqModule {
           {
             name,
             useFactory: (configService: ConfigService) => {
-              const urls = [configService.get<string>('RABBIT_MQ_URI') ?? 'amqp://rabbitmq:rabbitmq@127.0.0.1:5672']
+              const urls = [configService.get<string>('RABBIT_MQ_URI') ?? 'amqp://rabbitmq:rabbitmq@127.0.0.1:5672/vhost']
               const queueName = configService.get<string>('RABBIT_MQ_SERVICE_QUEUE') ?? queue
 
               console.log('RabbitMQ URL:', urls)

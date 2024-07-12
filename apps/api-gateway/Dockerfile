@@ -1,17 +1,21 @@
 FROM node:lts-alpine
+WORKDIR /app
 
-WORKDIR /usr/src/app
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 
-COPY dist/apps/api-gateway ./
-COPY package*.json ./
+RUN corepack enable
 
-ENV PORT=3001
+COPY ./dist/apps/api-gateway .
+
+COPY package.json package-lock.json ./
+
+RUN pnpm install --production
+
+ENV PORT=3000
 
 EXPOSE ${PORT}
 
-RUN npm install
+CMD node main.js
 
-# dependencies that nestjs needs
-RUN npm install reflect-metadata tslib rxjs @nestjs/platform-express
 
-CMD ["node", "main"]

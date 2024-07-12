@@ -19,7 +19,7 @@ async function bootstrap() {
 
 
   const config = {
-    GATEWAY_PORT:configService.get('PORT') || 3001,
+    GATEWAY_PORT:configService.get('PORT') || 3000,
     REDIS_URL: configService.get('REDIS_URL') || "localhost",
     REDIS_PORT:configService.get('REDIS_PORT')|| 6379
   };
@@ -58,8 +58,10 @@ async function bootstrap() {
     },
   });
 
+  const hostname = '0.0.0.0';
+
   await app.startAllMicroservices();
-  await app.listen(config.GATEWAY_PORT)
+  await app.listen(config.GATEWAY_PORT,hostname);
 
   Logger.log(
     `Server running on http://localhost:${config.GATEWAY_PORT}/${globalPrefix}`,

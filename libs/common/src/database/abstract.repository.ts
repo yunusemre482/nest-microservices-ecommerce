@@ -84,7 +84,7 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     return await this.model.countDocuments(filterQuery);
   }
 
-  async startTransaction() {
+  async startTransaction(): Promise<void | any> {
     const session = await this.connection.startSession();
     session.startTransaction();
     return session;
