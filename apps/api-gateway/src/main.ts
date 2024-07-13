@@ -7,26 +7,24 @@ import {
 import fastifyHelmet from "@fastify/helmet";
 import fastifyCompress from "@fastify/compress";
 import fastifyRateLimit from "@fastify/rate-limit";
+import fastifyCookie from '@fastify/cookie';
+import fastifyCors from '@fastify/cors';
 
-import { Logger, ValidationPipe } from "@nestjs/common";
+
+
+import { Logger, ValidationPipe, VersioningType } from "@nestjs/common";
 import { AppModule } from "./app/app.module";
 import { ConfigService } from "@nestjs/config";
+import { NodeEnvironment } from '@libs/shared/src';
 
 async function bootstrap() {
-  const fastify = new FastifyAdapter({
-    logger: process.env.NODE_ENV === 'development' ? true : false,
-    trustProxy: true
-  });
 
   const configService = new ConfigService();
 
-
-
-  const config = {
-    GATEWAY_PORT: configService.get('PORT') || 3000,
-    REDIS_URL: configService.get('REDIS_URL') || "localhost",
-    REDIS_PORT: configService.get('REDIS_PORT') || 6379
-  };
+  const fastify = new FastifyAdapter({
+    logger: process.env.NODE_ENV === NodeEnvironment.DEVELOPMENT ? true : false,
+    trustProxy: true
+  });
 
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
@@ -35,10 +33,10 @@ async function bootstrap() {
 
   const globalPrefix = 'api';
 
-
-
   app.setGlobalPrefix(globalPrefix);
-  app.enableCors();
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -48,12 +46,17 @@ async function bootstrap() {
     })
   );
 
+
+  await app.register(fastifyCompress, { encodings: ['gzip'] });
+  await app.register(fastifyCookie, { secret: configService.get('COOKIE_SECRET') });
   await app.register(fastifyRateLimit, {
     max: 100,
     timeWindow: '1 minute',
   });
-
-  await app.register(fastifyCompress, { encodings: ['gzip'] });
+  await app.register(fastifyCors, {
+    origin: true,
+    credentials: true,
+  });
   await app.register(fastifyHelmet, {
     contentSecurityPolicy: {
       directives: {
@@ -67,12 +70,13 @@ async function bootstrap() {
   });
 
   const hostname = '0.0.0.0';
+  const PORT = configService.get<number>('PORT') as number ?? 3000;
 
   await app.startAllMicroservices();
-  await app.listen(config.GATEWAY_PORT, hostname);
+  await app.listen(PORT, hostname);
 
   Logger.log(
-    `Server running on http://localhost:${config.GATEWAY_PORT}/${globalPrefix}`,
+    `Server running on http://localhost:${PORT}/${globalPrefix}`,
     'Bootstrap',
   );
 }
