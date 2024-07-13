@@ -32,5 +32,5 @@ jobs:
       - uses: nrwl/nx-set-shas@v4
 
       # Prepend any command with "nx-cloud record --" to record its logs to Nx Cloud
-      - run: npx nx-cloud record -- echo Hello World
-      - run: npx nx affected -t lint test build
+      - run: npx nx-cloud record -- nx format:check
+      - run: npx nx affected -t lint test build e2e-ci
