@@ -13,4 +13,8 @@ export class UsersService {
   getUsers(): Observable<[]> {
     return this.userClient.send('getAllUsers', {});
   }
+
+  createUser(user: any): Observable<object> {
+    return this.userClient.send('createUser', user);
+  }
 }

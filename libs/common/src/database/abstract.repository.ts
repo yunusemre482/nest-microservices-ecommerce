@@ -25,8 +25,8 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     private readonly connection: Connection,
   ) { }
 
-  async create(
-    document: Omit<TDocument, '_id'>,
+  protected async create(
+    document: Partial<Omit<TDocument, '_id'>>,
     options?: SaveOptions,
   ): Promise<TDocument> {
 
@@ -101,8 +101,7 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
       this.model.aggregate(pipeline).then((result) => {
         resolve(result[0]);
       });
-    }
-    );
+    });
   }
 
   async updateOne(
@@ -120,6 +119,22 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
   ): Promise<UpdateWriteOpResult> {
     return await this.model.updateMany(filter, updated, options);
   }
+
+  async deleteOne(filter: FilterQuery<TDocument>): Promise<TDocument | null> {
+    return await this.model.findOneAndDelete(filter);
+  }
+
+  async deleteMany(filter: FilterQuery<TDocument>): Promise<number> {
+    return await this.model.deleteMany(filter).then((result) => result.deletedCount || 0);
+  }
+
+  async deleteById(id: string): Promise<TDocument | null> {
+    return await this.model.findByIdAndDelete(id);
+  }
+
+  /**
+   *  Aggregation operations
+   */
 
   async countDocuments(filterQuery: FilterQuery<TDocument>) {
     return await this.model.countDocuments(filterQuery);

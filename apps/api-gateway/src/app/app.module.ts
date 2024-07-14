@@ -8,6 +8,8 @@ import { OrdersModule } from '../orders/orders.module';
 import { ProductsModule } from '../products/products.module';
 import { AuthModule } from '../auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { GlobalResponseInterceptor } from '../middlewares/response.middleware';
 
 @Module({
   imports: [
@@ -21,6 +23,13 @@ import { ConfigModule } from '@nestjs/config';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: GlobalResponseInterceptor,
+    },
+
+  ],
 })
 export class AppModule { }

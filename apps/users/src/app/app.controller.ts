@@ -9,9 +9,12 @@ export class AppController {
 
   constructor(private readonly appService: AppService) { }
 
-  @Get()
-  getData() {
-    return this.appService.getData();
+  @MessagePattern('createUser')
+  async createUser(@Payload() payload: any): Promise<object> {
+
+    this.logger.log('Picking createUser request from queue', payload);
+
+    return await this.appService.createUser(payload);
   }
 
   @MessagePattern('getAllUsers')

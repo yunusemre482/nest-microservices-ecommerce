@@ -16,7 +16,9 @@
           "buildTarget": "api-gateway:build:development"
         },
         "production": {
-          "buildTarget": "api-gateway:build:production"
+          "buildTarget": "api-gateway:build:production",
+          "inspect": "false"
+          
         }
       }
     }

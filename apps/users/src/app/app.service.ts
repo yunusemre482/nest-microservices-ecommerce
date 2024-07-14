@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { UserRepository } from './repositories/user.repository';
+import { CreateUserDTO } from '@libs/shared/src/dtos/users/create-user.dto';
 
 @Injectable()
 export class AppService {
-  getData(): { message: string } {
-    return { message: 'Hello API' };
-  }
+
+  constructor(
+    private readonly userRepository: UserRepository,
+  ) { }
+
 
   getUsers() {
     return [
@@ -20,6 +24,10 @@ export class AppService {
       }
     ];
 
+  }
+
+  async createUser(user: CreateUserDTO) {
+    return this.userRepository.createUser(user);
   }
 
   async findAllUsers() {

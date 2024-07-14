@@ -6,21 +6,27 @@ import { Connection } from 'mongoose';
   imports: [
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGODB_URI') ?? "mongodb://root:example@localhost:27017/?authMechanism=DEFAULT&authSource=admin",
-        connectionFactory: (connection: Connection) => {
-          if (connection.readyState === 1) {
-            Logger.log('DB connected');
-          }
+      useFactory: async (configService: ConfigService) => {
+        console.log("database module environment MONGO_URI", configService.get<string>('MONGODB_URI'));
+        console.log("database module environment MONGODB_DB_NAME", configService.get<string>('MONGODB_DB_NAME'));
 
-          connection.on('disconnected', () => {
-            Logger.log('DB disconnected');
-          });
+        return {
+          uri: configService.get<string>('MONGODB_URI'),
+          dbName: configService.get<string>('MONGODB_DB_NAME'),
+          connectionFactory: (connection: Connection) => {
+            if (connection.readyState === 1) {
+              Logger.log('DB connected');
+            }
 
-          return connection;
-        },
-      }),
-      inject: [ConfigService]
+            connection.on('disconnected', () => {
+              Logger.log('DB disconnected');
+            });
+
+            return connection;
+          },
+        }
+      },
+      inject: [ConfigService],
     }),
   ],
 })

@@ -17,10 +17,10 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@apps/*": ["apps/*"],
-      "@libs/*": ["libs/*"],
-      "@shared/*": ["shared/*"],
-      "@types/*": ["types/*"]
+      "@apps/*": ["./apps/*"],
+      "@libs/*": ["./libs/*"],
+      "@shared/*": ["./libs/shared*"],
+      "@types/*": ["./libs/types/*"]
     }
   },
   "include": ["apps/**/*", "libs/**/*", "shared/**/*", "types/**/*"],
