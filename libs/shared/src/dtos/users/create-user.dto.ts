@@ -1,9 +1,11 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { I18nTranslations } from '@libs/common/src/internationalization/types/i18n.types';
+import { i18nValidationMessage } from 'nestjs-i18n';
 
 
 export class CreateUserDTO {
   @IsString({
-    message: 'validation.IS_STRING'
+    message: i18nValidationMessage<I18nTranslations>("validation.IS_STRING")
   })
   @IsNotEmpty({
     message: 'validation.IS_NOT_EMPTY'
@@ -39,10 +41,10 @@ export class CreateUserDTO {
   firstName!: string;
 
   @IsString({
-    message: 'validation.IS_STRING'
+    message: i18nValidationMessage<I18nTranslations>("validation.IS_STRING")
   })
   @IsNotEmpty({
-    message: 'validation.IS_NOT_EMPTY'
+    message: i18nValidationMessage<I18nTranslations>("validation.IS_NOT_EMPTY")
   })
   lastName!: string;
 
