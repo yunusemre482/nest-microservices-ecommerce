@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -10,6 +10,8 @@ import { AuthModule } from '../auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { GlobalResponseInterceptor } from '../middlewares/response.middleware';
+import { LoggerMiddleware } from '../middlewares/logger.middleware';
+import { ProfilerMiddleware } from '../middlewares/profiler.middleware';
 
 @Module({
   imports: [
@@ -28,8 +30,12 @@ import { GlobalResponseInterceptor } from '../middlewares/response.middleware';
     {
       provide: APP_INTERCEPTOR,
       useClass: GlobalResponseInterceptor,
-    },
-
+    }
   ],
 })
-export class AppModule { }
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ProfilerMiddleware).forRoutes('*');
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

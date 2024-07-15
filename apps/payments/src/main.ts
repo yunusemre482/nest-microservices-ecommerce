@@ -24,6 +24,7 @@ export async function bootstrap() {
     options: {
       urls: [url],
       queue: queue,
+      noAck:false, // NOTE : This is set to false to ensure that the message is not lost if the consumer crashes before processing the message.
       queueOptions: {
         durable: true
       }

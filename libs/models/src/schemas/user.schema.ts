@@ -10,7 +10,8 @@ export type UserDocument = HydratedDocument<User>;
   toJSON: {
     virtuals: true,
     versionKey: false,
-    transform: (doc, ret) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    transform: (doc, ret: Record<string, any>) => {
       ret.id = ret._id;
 
       delete ret._id;
@@ -19,7 +20,6 @@ export type UserDocument = HydratedDocument<User>;
       return ret;
     },
   },
-
   toObject: {
     virtuals: true,
     versionKey: false,

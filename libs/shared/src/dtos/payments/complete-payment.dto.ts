@@ -1,13 +1,11 @@
 import { IsNotEmpty, IsString } from "class-validator";
 
-
-export class LoginDTO {
+export class CompletePaymentDTO {
   @IsString()
   @IsNotEmpty()
-  username!: string;
-
+  paymentId!: string;
 
   @IsString()
   @IsNotEmpty()
-  password!: string;
+  payerId!: string;
 }

@@ -1,8 +1,9 @@
 import { AbstractRepository } from '@libs/common/src/database/abstract.repository';
-import { User, UserDocument } from '../models/user.schema';
+
 import { Logger } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, FilterQuery, Model, QueryOptions, SaveOptions, UpdateQuery } from 'mongoose';
+import { User, UserDocument } from '@libs/models/src/schemas/user.schema';
 
 
 export class UserRepository extends AbstractRepository<UserDocument> {

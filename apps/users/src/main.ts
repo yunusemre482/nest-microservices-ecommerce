@@ -31,6 +31,7 @@ export async function bootstrap() {
     options: {
       urls: [url],
       queue: queue,
+      noAck: false, // NOTE : We need to set this to false to make sure that the message is not lost
       queueOptions: {
         durable: true
       }

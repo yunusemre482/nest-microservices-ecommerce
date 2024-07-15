@@ -6,7 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from '@libs/common/src/database/database.module';
 import { UserRepository } from './repositories/user.repository';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from './models/user.schema';
+import { User, UserSchema } from '@libs/models/src';
 import { InternationalizationModule } from '@libs/common/src/internationalization/internationalization.module';
 
 @Module({

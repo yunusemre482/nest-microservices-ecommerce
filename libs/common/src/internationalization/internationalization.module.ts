@@ -8,12 +8,11 @@ import { I18nModule, AcceptLanguageResolver, QueryResolver, HeaderResolver } fro
   imports: [
     I18nModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
-        fallbackLanguage: configService.getOrThrow('FALLBACK_LANGUAGE') ?? 'en',
+        fallbackLanguage: configService.get<string>('FALLBACK_LANGUAGE') ?? 'en',
         loaderOptions: {
-          path: path.join(__dirname, '../internationalization/'),
+          path: path.join(__dirname, 'locales'),
           watch: true,
         },
-        typesOutputPath: path.join(__dirname, '../internationalization/types/i18n.types.ts'),
       }),
       resolvers: [
         { use: QueryResolver, options: ['lang'] },

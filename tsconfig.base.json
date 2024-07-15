@@ -23,7 +23,7 @@
       "@types/*": ["./libs/types/*"]
     }
   },
-  "include": ["apps/**/*", "libs/**/*", "shared/**/*", "types/**/*"],
+  "include": ["apps/**/*", "libs/**/*", "libs/shared/**/*", "types/**/*"],
   "exclude": [
     "node_modules",
     "temp",

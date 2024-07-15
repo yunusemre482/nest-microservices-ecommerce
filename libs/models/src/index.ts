@@ -1,1 +1,1 @@
-export * from './lib/models.module';
+export * from "./schemas/user.schema";

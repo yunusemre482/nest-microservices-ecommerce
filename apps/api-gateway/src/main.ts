@@ -16,6 +16,8 @@ import { Logger, ValidationPipe, VersioningType } from "@nestjs/common";
 import { AppModule } from "./app/app.module";
 import { ConfigService } from "@nestjs/config";
 import { NodeEnvironment } from '@libs/shared/src';
+import { useContainer } from "class-validator";
+
 
 async function bootstrap() {
 
@@ -46,6 +48,7 @@ async function bootstrap() {
     })
   );
 
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   await app.register(fastifyCompress, { encodings: ['gzip'] });
   await app.register(fastifyCookie, { secret: configService.get('COOKIE_SECRET') });
