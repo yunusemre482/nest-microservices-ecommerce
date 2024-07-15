@@ -17,6 +17,7 @@ import { AppModule } from "./app/app.module";
 import { ConfigService } from "@nestjs/config";
 import { NodeEnvironment } from '@libs/shared/src';
 import { useContainer } from "class-validator";
+import { I18nValidationPipe } from "nestjs-i18n";
 
 
 async function bootstrap() {
@@ -45,8 +46,17 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
+    }),
+    new I18nValidationPipe({
+      always: true,
+      whitelist: true,
+      stopAtFirstError: true,
+      transform: true,
+      skipMissingProperties: true,
     })
   );
+
+
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 

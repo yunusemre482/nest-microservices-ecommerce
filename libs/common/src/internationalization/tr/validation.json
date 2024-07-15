@@ -1,0 +1,23 @@
+{
+    "IS_NOT_EMPTY": "{property} boş bırakılamaz",
+    "IS_EMAIL": "Geçersiz e-posta.",
+    "IS_BOOLEAN": "{property} bir boolean değil.",
+    "MIN": "{property} en az {constraints.0} olmalıdır.",
+    "MAX": "{property} en fazla {constraints.0} olmalıdır.",
+    "IS_STRING": "{property} bir string olmalıdır.",
+    "IS_NUMBER": "{property} bir sayı olmalıdır.",
+    "LENGTH": "{property} {constraints.0}-{constraints.1} karakter uzunluğunda olmalıdır.",
+    "IS_PHONE_NUMBER": "{property} geçerli bir telefon numarası olmalıdır.",
+    "IS_ARRAY": "{property} bir dizi olmalıdır.",
+    "IS_IN": "{property} {constraints.0} değerlerinden biri olmalıdır.",
+    "IS_STRING_ARRAY": "{property} dizisinin değerleri string olmalıdır.",
+    "IS_DATE": "{property} geçerli bir tarih olmalıdır.",
+    "IS_MONGO_ID": "{property} geçerli bir mongo ID (string) olmalıdır.",
+    "IS_ENUM": "{property} geçerli bir {constraints.0} olmalıdır.",
+    "ARRAY_MAX_SIZE": "{property} dizisinin en fazla {constraints.0} elemanı olmalıdır.",
+    "ARRAY_MIN_SIZE": "{property} dizisinin en az {constraints.0} elemanı olmalıdır.",
+    "IS_USERNAME_FORMAT": "{property} geçerli bir kullanıcı adı olmalıdır. (harf, rakam, nokta (.) ve alt çizgi (_) içerebilir.)",
+    "IS_OPTIONAL": "Değer eksik.",
+    "IS_URL": "URL düzgün bir formatta olmalıdır.",
+    "IS_OBJECT": "Obje eksik."
+}

@@ -1,0 +1,23 @@
+{
+    "IS_NOT_EMPTY": "{property} cannot be empty.",
+    "IS_EMAIL": "Email is invalid.",
+    "IS_BOOLEAN": "{property} is not a boolean.",
+    "MIN": "{property} needs to be at least {constraints.0}.",
+    "MAX": "{property} needs to be less than {constraints.0}.",
+    "IS_STRING": "{property} needs to be a string.",
+    "IS_NUMBER": "{property} needs to be a number.",
+    "LENGTH": "{property} needs to be between {constraints.0} and {constraints.1} characters long.",
+    "IS_PHONE_NUMBER": "{property} needs to be a phone number.",
+    "IS_ARRAY": "{property} needs to be an array.",
+    "IS_IN": "{property} needs to be one of the following: {constraints.0}.",
+    "IS_STRING_ARRAY": "{property} needs to be a string array.",
+    "IS_DATE": "{property} needs to be a date.",
+    "IS_MONGO_ID": "{property} needs to be a valid mongo id (string).",
+    "IS_ENUM": "{property} needs to be one of the following: {constraints.0}.",
+    "ARRAY_MAX_SIZE": "{property} needs to have a maximum of {constraints.0} elements.",
+    "ARRAY_MIN_SIZE": "{property} needs to have a minimum of {constraints.0} elements.",
+    "IS_USERNAME_FORMAT": "{property} needs to be a valid username. (only letters, numbers, dots and underscores are allowed)",
+    "IS_OPTIONAL": "Value is missing.",
+    "IS_URL": "URL needs to be relevant format.",
+    "IS_OBJECT": "Object is missing."
+}

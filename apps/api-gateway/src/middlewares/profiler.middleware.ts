@@ -10,18 +10,6 @@ export class ProfilerMiddleware implements NestMiddleware {
   use(req: FastifyRequest, res: FastifyReply['raw'], next: () => void) {
     const start = Date.now();
 
-    // req = Object.assign(req, {
-    //   start,
-    //   url: req.url ?? "",
-    //   originalUrl: req.originalUrl ?? "",
-    // });
-
-    // req.raw = Object.assign(req.raw ?? {}, {
-    //   start,
-    //   url: req.url ?? "",
-    //   originalUrl: req.originalUrl ?? "",
-    // });
-
     res.on("finish", () => {
       const elapsed = Date.now() - start;
 
@@ -30,11 +18,7 @@ export class ProfilerMiddleware implements NestMiddleware {
       }else{
         this.logger.log(`Request: ${req.method} ${req.url} ${elapsed}ms`);
       }
-
-
     });
-
-
 
     next();
   }

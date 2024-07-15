@@ -9,7 +9,7 @@ export class LoggerMiddleware implements NestMiddleware {
   use(req: FastifyRequest, res: FastifyReply, next: () => void) {
 
 
-    if (process.env.NODE_ENV !== NodeEnvironment.DEVELOPMENT) return next();
+    if (process.env.NODE_ENV !== NodeEnvironment.DEVELOPMENT) next();
 
     this.logger.log(`Request...`);
     this.logger.log(`Method: ${req.method}`);

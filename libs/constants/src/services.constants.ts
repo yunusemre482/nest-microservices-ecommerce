@@ -18,6 +18,8 @@ export const AUTHENTICATION_SERVICE = 'AUTHENTICATION_SERVICE';
 export const AUTHENTICATION_SERVICE_QUEUE = 'auth-service-queue';
 
 export const RABBIT_MQ_DEFAULT_URL = 'amqp://rabbitmq:rabbitmq@127.0.0.1:5672/vhost';
+export const DEFAULT_MONGODB_URI = 'mongodb://root:example@localhost:27017/?authMechanism=DEFAULT';
+export const DEFAULT_AWS_REGION = 'eu-central-1';
 
 export const SERVICES_NAMES = {
   USERS_SERVICE: 'user',
