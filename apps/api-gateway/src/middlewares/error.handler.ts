@@ -52,23 +52,6 @@ export class GlobalExceptionFilter
       }
     };
 
-    // logs instance of exception
-    this.logger.debug('is instance of I18', exception instanceof I18nValidationException);
-
-    if (exception instanceof I18nValidationException) {
-      const errors = exception.errors;
-
-      errorResponse.message = "Validation failed";
-      errorResponse.details.errors = errors.map(({ property, constraints }) => {
-        const key = Object.keys(constraints || {})[0];
-        const error = constraints?.[key] || 'Invalid';
-        return {
-          property,
-          error
-        };
-      });
-    }
-
     if (this.configService.get("NODE_ENV") === NodeEnvironment.PRODUCTION) {
       this.logger.error(
         `HTTP Status: ${status} Error Message: ${JSON.stringify(errorResponse)}`,

@@ -4,7 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as path from 'path';
 import { I18nModule, AcceptLanguageResolver, QueryResolver, HeaderResolver } from 'nestjs-i18n';
 
-console.log(path.join(__dirname,"i18n/"));
+console.log(path.join(__dirname, "i18n/"));
 
 @Module({
   imports: [
@@ -13,15 +13,16 @@ console.log(path.join(__dirname,"i18n/"));
       useFactory: (configService: ConfigService) => ({
         fallbackLanguage: configService.get<string>('FALLBACK_LANGUAGE') ?? 'en',
         loaderOptions: {
-          path:path.join(__dirname,"/src/i18n/"),
+          path: path.join(__dirname, "/src/i18n/"),
           watch: true,
         },
-        resolvers: [
-          { use: QueryResolver, options: ['lang'] },
-          AcceptLanguageResolver,
-          new HeaderResolver(['x-lang']),
-        ],
+        logging: configService.get<string>('NODE_ENV') === 'development', // REVIEW: Is this necessary?
       }),
+      resolvers: [
+        { use: QueryResolver, options: ['lang'] },
+        { use: HeaderResolver, options: ['lang', "x-lang"] },
+        { use: AcceptLanguageResolver, options: { matchType: 'strict' } },
+      ],
       inject: [ConfigService],
     }),
   ],

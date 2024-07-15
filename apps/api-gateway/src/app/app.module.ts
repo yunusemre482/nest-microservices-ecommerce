@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
+import { MiddlewareConsumer, Module, ValidationPipe, ArgumentsHost } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from '../users/users.module';
@@ -15,6 +15,7 @@ import { GlobalExceptionFilter } from '../middlewares/error.handler';
 import { WinstonLoggerService } from '../middlewares/winston-logger.handler';
 import { InternationalizationModule } from '@libs/common/src/internationalization/internationalization.module';
 import { I18nValidationException, I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
+import { CustomI18nValidationExceptionFilter } from '../middlewares/custom-i18n.exception.filter';
 
 
 @Module({
@@ -40,9 +41,11 @@ import { I18nValidationException, I18nValidationExceptionFilter, I18nValidationP
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({
+        always: true,
         transform: true,
         whitelist: true,
         forbidNonWhitelisted: true,
+        stopAtFirstError: true,
         exceptionFactory: (errors) => {
           return new I18nValidationException(errors);
         },
@@ -51,9 +54,11 @@ import { I18nValidationException, I18nValidationExceptionFilter, I18nValidationP
     {
       provide: APP_PIPE,
       useValue: new I18nValidationPipe({
-        transform: true,
+        always: true,
         whitelist: true,
-        skipMissingProperties: false,
+        stopAtFirstError: true,
+        transform: true,
+        skipMissingProperties: true,
       }),
     },
     {
@@ -62,31 +67,7 @@ import { I18nValidationException, I18nValidationExceptionFilter, I18nValidationP
     },
     {
       provide: APP_FILTER,
-      useFactory() {
-        return new I18nValidationExceptionFilter({
-          errorFormatter(errors) {
-            return errors.map(({ property, constraints }) => {
-              const key = Object.keys(constraints || {})[0];
-              const error = constraints?.[key] || 'Invalid';
-              return {
-                property,
-                error
-              };
-            });
-          },
-          responseBodyFormatter(host, exc, formattedErrors) {
-            const response = exc.getResponse();
-            const status = exc.getStatus();
-
-            return {
-              status,
-              message: response,
-              errors: formattedErrors
-            };
-          }
-        })
-
-      }
+      useClass: CustomI18nValidationExceptionFilter,
     }
   ],
 })
