@@ -40,3 +40,18 @@ Thumbs.db
 
 .nx/cache
 .nx/workspace-data
+
+# include all .env files
+./apps/**/.env.*
+./apps/**/.env.local
+./apps/**/.env.development
+./apps/**/.env.test
+./apps/**/.env.staging
+./apps/**/.env.production
+
+./libs/**/.env.*
+./libs/**/.env.local
+./libs/**/.env.development
+./libs/**/.env.test
+./libs/**/.env.staging
+./libs/**/.env.production
