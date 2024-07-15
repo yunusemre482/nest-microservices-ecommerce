@@ -1,5 +1,4 @@
 import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
-
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from '../users/users.module';
@@ -15,38 +14,53 @@ import { ProfilerMiddleware } from '../middlewares/profiler.middleware';
 import { GlobalExceptionFilter } from '../middlewares/error.handler';
 import { WinstonLoggerService } from '../middlewares/winston-logger.handler';
 import { InternationalizationModule } from '@libs/common/src/internationalization/internationalization.module';
-import { I18nValidationExceptionFilter } from 'nestjs-i18n';
+import { I18nValidationException, I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
+
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    InternationalizationModule,
     AuthModule,
     UsersModule,
     PaymentModule,
     OrdersModule,
     ProductsModule,
-    InternationalizationModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
   ],
   controllers: [AppController],
   providers: [
     AppService,
     WinstonLoggerService,
     {
-      provide: APP_PIPE,
-      useClass: ValidationPipe,
-    },
-    {
       provide: APP_INTERCEPTOR,
       useClass: GlobalResponseInterceptor,
+    },
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        exceptionFactory: (errors) => {
+          return new I18nValidationException(errors);
+        },
+      }),
+    },
+    {
+      provide: APP_PIPE,
+      useValue: new I18nValidationPipe({
+        transform: true,
+        whitelist: true,
+        skipMissingProperties: false,
+      }),
     },
     {
       provide: APP_FILTER,
       useClass: GlobalExceptionFilter,
     },
     {
-
       provide: APP_FILTER,
       useFactory() {
         return new I18nValidationExceptionFilter({
@@ -63,6 +77,7 @@ import { I18nValidationExceptionFilter } from 'nestjs-i18n';
           responseBodyFormatter(host, exc, formattedErrors) {
             const response = exc.getResponse();
             const status = exc.getStatus();
+
             return {
               status,
               message: response,

@@ -41,23 +41,6 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-    new I18nValidationPipe({
-      always: true,
-      whitelist: true,
-      stopAtFirstError: true,
-      transform: true,
-      skipMissingProperties: true,
-    })
-  );
-
-
-
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   await app.register(fastifyCompress, { encodings: ['gzip'] });

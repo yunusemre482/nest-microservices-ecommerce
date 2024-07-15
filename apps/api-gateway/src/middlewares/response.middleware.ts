@@ -10,7 +10,7 @@ export class GlobalResponseInterceptor<T> implements NestInterceptor<T, unknown>
         path: context.switchToHttp().getRequest().url,
         statusCode: context.switchToHttp().getResponse().statusCode,
         success: true,
-        data,
+        data: data ?? null,
         error: null,
       })),
     );

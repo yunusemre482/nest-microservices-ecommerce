@@ -1,26 +1,28 @@
 {
-  "name": "api-gateway",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/api-gateway/src",
-  "projectType": "application",
-  "tags": [],
-  "targets": {
-    "serve": {
-      "executor": "@nx/js:node",
-      "defaultConfiguration": "development",
-      "options": {
-        "buildTarget": "api-gateway:build"
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "api-gateway:build:development"
-        },
-        "production": {
-          "buildTarget": "api-gateway:build:production",
-          "inspect": "false"
-          
+    "name": "api-gateway",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "apps/api-gateway/src",
+    "projectType": "application",
+    "tags": [],
+    "targets": {
+        "serve": {
+            "executor": "@nx/js:node",
+            "defaultConfiguration": "development",
+            "options": {
+                "buildTarget": "api-gateway:build"
+            },
+            "configurations": {
+                "development": {
+                    "buildTarget": "api-gateway:build:development",
+                    "runtimeArgs": ["--inspect"],
+                    "args": ["--node-env=development"]
+                },
+                "production": {
+                    "buildTarget": "api-gateway:build:production",
+                    "inspect": "false",
+                    "args": ["--node-env=development"]
+                }
+            }
         }
-      }
     }
-  }
 }
