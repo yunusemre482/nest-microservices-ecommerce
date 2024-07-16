@@ -5,7 +5,13 @@ services:
     container_name: api-gateway
     build:
       context: .
-      dockerfile: ./apps/api-gateway/Dockerfile
+      dockerfile: ./Dockerfile
+      tags:
+        - "api-gateway-image:latest"
+      args:
+        - APP=api-gateway
+
+
     volumes:
       - .:/usr/src/app
     ports:
@@ -18,6 +24,7 @@ services:
       - mongodb-arbiter
       - minio
     networks:
+      - mongodb_nodejs
       - rabbitmq_nodejs
   minio:
     image: minio/minio:latest
@@ -53,9 +60,9 @@ services:
       RABBITMQ_DEFAULT_USER: rabbitmq
       RABBITMQ_DEFAULT_PASS: rabbitmq
     networks:
-        - rabbitmq_nodejs
+      - rabbitmq_nodejs
   mongodb-primary:
-    container_name: mongo
+    container_name: mongodb-primary
     image: mongo
     restart: always
     ports:
@@ -112,5 +119,7 @@ volumes:
     driver: local
 
 networks:
+  mongodb_nodejs:
+    driver: bridge
   rabbitmq_nodejs:
     driver: bridge

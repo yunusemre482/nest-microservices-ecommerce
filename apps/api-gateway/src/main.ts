@@ -44,7 +44,7 @@ async function bootstrap() {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   await app.register(fastifyCompress, { encodings: ['gzip'] });
-  await app.register(fastifyCookie, { secret: configService.get('COOKIE_SECRET') });
+  await app.register(fastifyCookie, { secret: configService.get('COOKIE_SECRET') ?? "cookie-top-level-secret" });
   await app.register(fastifyRateLimit, {
     max: 100,
     timeWindow: '1 minute',

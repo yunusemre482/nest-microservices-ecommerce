@@ -5,6 +5,56 @@
     "projectType": "application",
     "tags": [],
     "targets": {
+        "build": {
+            "executor": "@nx/webpack:webpack",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/apps/api-gateway",
+                "main": "apps/api-gateway/src/main.ts",
+                "tsConfig": "apps/api-gateway/tsconfig.app.json",
+                "assets": [
+                    "apps/api-gateway/src/assets",
+                    {
+                        "input": "libs/common/src/internationalization/",
+                        "glob": "**/*.json",
+                        "output": "./src/i18n/"
+                    },
+                    {
+                        "input": "apps/api-gateway/k8s/",
+                        "glob": "*.json",
+                        "output": "./k8s/"
+                    }
+                ],
+                "generatePackageJson": true,
+                "target": "node",
+                "compiler": "tsc",
+                "isolatedConfig": false
+            },
+            "configurations": {
+                "development": {
+                    "optimization": true,
+                    "extractLicenses": true,
+                    "inspect": false,
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/api-gateway/src/environments/environment.ts",
+                            "with": "apps/api-gateway/src/environments/environment.prod.ts"
+                        }
+                    ]
+                },
+                "production": {
+                    "optimization": false,
+                    "extractLicenses": true,
+                    "inspect": false,
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/api-gateway/.env.production.example",
+                            "with": "apps/api-gateway/.env.prod"
+                        }
+                    ]
+                }
+            }
+        },
         "serve": {
             "executor": "@nx/js:node",
             "defaultConfiguration": "development",

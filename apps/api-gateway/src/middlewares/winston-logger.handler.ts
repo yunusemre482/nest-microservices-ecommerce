@@ -115,7 +115,7 @@ export class WinstonLoggerService {
       ],
     };
 
-    const instanceLogger = process.env.NODE_ENV !== NodeEnvironment.DEVELOPMENT ? prodLogger : devLogger;
+    const instanceLogger = prodLogger;
     this.logger = createLogger(instanceLogger);
   }
 

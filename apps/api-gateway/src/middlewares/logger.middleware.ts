@@ -6,7 +6,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 export class LoggerMiddleware implements NestMiddleware {
   private readonly logger = new Logger(LoggerMiddleware.name);
 
-  use(req: FastifyRequest, res: FastifyReply, next: () => void) {
+  use(req: FastifyRequest & { cookies: any }, res: FastifyReply, next: () => void) {
 
 
     if (process.env.NODE_ENV !== NodeEnvironment.DEVELOPMENT) next();

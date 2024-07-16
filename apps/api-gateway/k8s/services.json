@@ -1,0 +1,21 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "api-gateway-service"
+  },
+  "spec": {
+    "type": "NodePort",
+    "selector": {
+      "app": "api-gateway"
+    },
+    "ports": [
+      {
+        "protocol": "TCP",
+        "port": 80,
+        "targetPort": 3333,
+        "name": "api-gateway-service"
+      }
+    ]
+  }
+}

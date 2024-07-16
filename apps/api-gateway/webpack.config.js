@@ -15,11 +15,20 @@ module.exports = {
       tsConfig: './tsconfig.app.json',
       assets: [
         "./src/assets",
+        "apps/api-gateway/src/deployment.json",
+        "apps/api-gateway/src/services.json",
         {
           input: '../../libs/common/src/internationalization/',
           glob: '**/*.json',
           output: './src/i18n/',
+        },
+
+        {
+          input: './src',
+          glob: '**/*.json',
+          output: './src/',
         }
+
       ],
       optimization: true,
       outputHashing: 'none',
