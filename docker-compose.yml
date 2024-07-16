@@ -11,7 +11,8 @@ services:
       args:
         - APP=api-gateway
 
-
+    env_file:
+      - "apps/api-gateway/.env.development"
     volumes:
       - .:/usr/src/app
     ports:
