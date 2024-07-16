@@ -11,7 +11,8 @@ import { ExecutionContext, Injectable } from '@nestjs/common';
 import { FastifyRequest } from 'fastify';
 import { Reflector } from '@nestjs/core';
 import { ThrottlerRequest } from '@nestjs/throttler/dist/throttler.guard.interface';
-//import { TranslationService } from '@/infrastructure/i18n/translation.service';
+import { I18nService } from 'nestjs-i18n';
+
 
 @Injectable()
 export class CustomThrottlerGuard extends ThrottlerGuard {
@@ -25,7 +26,7 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
     @InjectThrottlerStorage()
     protected readonly storageService: ThrottlerStorage,
 
-    //public translationService: TranslationService,
+    private readonly i18nService: I18nService,
     public reflector: Reflector,
   ) {
     super(options, storageService, reflector);
@@ -60,9 +61,8 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
 
 
     if (totalHits > limit) {
-      throw new ThrottlerException('Too many requests');
       // TODO : add internationalization message here
-      //throw new ThrottlerException(this.translationService.t('main.tooManyRequests'));
+      throw new ThrottlerException(this.i18nService.t('main.TOO_MANY_REQUESTS', { args: { limit, ttl } }));
     }
 
     return true;
