@@ -5,7 +5,24 @@ export type I18nTranslations = {
   validation: {
     IS_NOT_EMPTY: string;
     IS_STRING: string;
+    IS_PHONE_NUMBER: string;
+    IS_EMAIL: string;
+    IS_USERNAME: string;
+    IS_ARRAY: string;
+    IS_NUMBER: string;
+    IS_DATE: string;
+    IS_BOOLEAN: string;
+    IS_INT: string;
+    IS_ENUM: string;
+    IS_OBJECT: string;
+    IS_OPTIONAL: string;
+    IS_POSITIVE: string;
+    IS_NEGATIVE: string;
+    IS_URL: string;
   };
+  main: {
+    TOO_MANY_REQUESTS: string;
+  }
 };
 
 export type I18nPath = Path<I18nTranslations>;
