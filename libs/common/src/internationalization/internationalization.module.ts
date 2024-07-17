@@ -4,7 +4,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as path from 'path';
 import { I18nModule, AcceptLanguageResolver, QueryResolver, HeaderResolver } from 'nestjs-i18n';
 
-console.log(path.join(__dirname, "i18n/"));
 
 @Module({
   imports: [

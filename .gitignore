@@ -55,3 +55,4 @@ Thumbs.db
 ./libs/**/.env.test
 ./libs/**/.env.staging
 ./libs/**/.env.production
+apps/**/.env.docker
