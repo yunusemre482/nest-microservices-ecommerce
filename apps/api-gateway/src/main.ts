@@ -44,9 +44,13 @@ async function bootstrap() {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   // NOTE : same issue here you can check and can fix it by using the following code https://stackoverflow.com/questions/77895041/nestjs-with-fastify-throws-an-error-when-registering-fastify-secure-session
-  await app.register(fastifyCompress as unknown as Parameters<NestFastifyApplication['register']>[0], { encodings: ['gzip'] });
+  await app.register(fastifyCompress as unknown as Parameters<NestFastifyApplication['register']>[0], {
+    encodings: ['gzip']
+  });
 
-  await app.register(fastifyCookie as unknown as Parameters<NestFastifyApplication['register']>[0], { secret: configService.get('COOKIE_SECRET') ?? "cookie-top-level-secret" });
+  await app.register(fastifyCookie as unknown as Parameters<NestFastifyApplication['register']>[0], {
+    secret: configService.get('COOKIE_SECRET') ?? "cookie-top-level-secret"
+  });
 
   await app.register(fastifyRateLimit as unknown as Parameters<NestFastifyApplication['register']>[0], {
     max: 100,

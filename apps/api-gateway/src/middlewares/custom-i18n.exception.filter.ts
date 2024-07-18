@@ -1,5 +1,5 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus } from '@nestjs/common';
-import { I18nValidationExceptionFilter, I18nValidationException } from 'nestjs-i18n';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Inject } from '@nestjs/common';
+import { I18nValidationExceptionFilter, I18nValidationException, I18nService } from 'nestjs-i18n';
 
 interface IFormattedError {
   property: string;

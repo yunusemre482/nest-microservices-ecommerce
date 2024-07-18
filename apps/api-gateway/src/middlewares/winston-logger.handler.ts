@@ -55,14 +55,18 @@ export class WinstonLoggerService {
           level: 'info',
         }),
         new transports.MongoDB({
-          db: this.configService.get("MONGO_URI") ?? DEFAULT_MONGODB_URI,
-          dbName: process.env.MONGO_DB_NAME,
+          db: this.configService.get("MONGODB_URI") ?? DEFAULT_MONGODB_URI,
+          dbName: process.env.MONGODB_DB_NAME,
           options: { useUnifiedTopology: true },
           collection: 'logs',
           level: 'info',
         }),
       ],
     };
+
+    console.debug('NODE_ENV:', this.configService.get("NODE_ENV"));
+    console.debug('MONGO_URI:', this.configService.get("MONGODB_URI"));
+    console.debug('MONGO_DB_NAME:', this.configService.get("MONGODB_DB_NAME"));
 
     // for production environment
     const prodLogger = {
@@ -76,10 +80,10 @@ export class WinstonLoggerService {
       transports: [
         new transports.Console(options.console),
         new transports.MongoDB({
-          db: this.configService.get("MONGO_URI") ?? DEFAULT_MONGODB_URI,
-          dbName: process.env.MONGO_DB_NAME,
-          options: { useUnifiedTopology: true },
+          db: this.configService.get("MONGODB_URI") ?? DEFAULT_MONGODB_URI,
+          dbName: process.env.MONGODB_DB_NAME,
           collection: 'logs',
+          options: { useUnifiedTopology: true },
           level: 'info',
         }),
         new S3Transport({
@@ -115,19 +119,19 @@ export class WinstonLoggerService {
       ],
     };
 
-    const instanceLogger = prodLogger;
+    const instanceLogger = this.configService.get("NODE_ENV") === NodeEnvironment.PRODUCTION ? prodLogger : devLogger;
     this.logger = createLogger(instanceLogger);
   }
 
-  log(level: string, message: string, meta: any[]) {
-    this.logger.log(level, message, meta);
+  log(level: string, message: string, ...meta: any[]) {
+    this.logger.log(level, message, ...meta);
   }
 
   info(message: string, ...meta: any[]) {
-    this.logger.info(message, meta);
+    this.logger.info(message, ...meta);
   }
 
   error(message: string | object, ...meta: any[]) {
-    this.logger.error(message.toString(), meta);
+    this.logger.error(message.toString(), ...meta);
   }
 }
