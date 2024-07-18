@@ -181,7 +181,7 @@ importers:
         specifier: ^1.4.11
         version: 1.4.11
       '@types/node':
-        specifier: ~18.16.9
+        specifier: ~18.16.20
         version: 18.16.20
       '@types/passport-jwt':
         specifier: ^4.0.1
