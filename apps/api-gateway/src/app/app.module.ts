@@ -21,6 +21,7 @@ import { CustomI18nValidationExceptionFilter } from '../middlewares/custom-i18n.
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: ['.env', '.env.development','.env.production','.env.development.example','.env.production.example'],
       isGlobal: true,
     }),
     InternationalizationModule,

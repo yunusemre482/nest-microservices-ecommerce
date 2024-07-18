@@ -12,8 +12,7 @@ import { InternationalizationModule } from '@libs/common/src/internationalizatio
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: ['.env', '.env.development', '.env.production']
+      envFilePath: ['.env', '.env.development', '.env.development.example','.env.production','.env.production.example'],
     }),
     DatabaseModule,
     MongooseModule.forFeature([

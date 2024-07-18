@@ -8,7 +8,7 @@ import { DatabaseModule } from '@libs/common/src';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ['.env', '.env.development', '.env.production'],
+      envFilePath: ['.env', '.env.development', '.env.development.example','.env.production','.env.production.example'],
     }),
     DatabaseModule
   ],
