@@ -75,6 +75,6 @@ import { CustomI18nValidationExceptionFilter } from '../middlewares/custom-i18n.
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     //consumer.apply(ProfilerMiddleware).forRoutes('*');
-    consumer.apply(LoggerMiddleware).forRoutes('*');
+    //consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

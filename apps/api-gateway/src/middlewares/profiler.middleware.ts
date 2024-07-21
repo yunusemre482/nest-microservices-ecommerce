@@ -7,15 +7,12 @@ const THRESHOLD = 200; // 200 ms
 export class ProfilerMiddleware implements NestMiddleware {
   private readonly logger = new Logger(ProfilerMiddleware.name);
 
-  use(req: FastifyRequest, res: FastifyReply['raw'], next: () => void) {
+  use(req: FastifyRequest['raw'], res: FastifyReply['raw'], next: () => void) {
     const start = Date.now();
-
-    // Remove the assignment statement
-    (req as any).originalUrl = req.url;
 
     res.on("finish", () => {
       const elapsed = Date.now() - start;
-
+      
       if (elapsed > THRESHOLD) {
         this.logger.warn(`Slow request: ${req.method} ${req.url} ${elapsed}ms`);
       } else {

@@ -12,12 +12,11 @@ import fastifyCors from '@fastify/cors';
 
 
 
-import { Logger, ValidationPipe, VersioningType } from "@nestjs/common";
+import { Logger, VersioningType } from "@nestjs/common";
 import { AppModule } from "./app/app.module";
 import { ConfigService } from "@nestjs/config";
 import { NodeEnvironment } from '@libs/shared/src';
 import { useContainer } from "class-validator";
-import { I18nValidationPipe } from "nestjs-i18n";
 
 
 async function bootstrap() {
